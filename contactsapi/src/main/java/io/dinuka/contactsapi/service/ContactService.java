@@ -10,6 +10,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+import static io.dinuka.contactsapi.constant.Constant.PHOTO_DIRECTORY;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 @Service
 @Slf4j
@@ -36,9 +47,29 @@ public class ContactService {
 
     public String uploadPhoto(String id, MultipartFile file) {
         Contact contact = getContactById(id);
-        String photoUrl = null;
+        String photoUrl = photoFunction.apply(id, file);
         contact.setPhotoUrl(photoUrl);
         contactRepo.save(contact);
         return photoUrl;
     }
+
+    private final Function<String, String> fileExtension = fileName -> Optional.of(fileName).filter(name -> name.contains("."))
+            .map(name -> "." + name.substring(fileName.lastIndexOf(".") + 1)).orElse(".png");
+    private final BiFunction<String, MultipartFile, String> photoFunction = (id, image) -> {
+        String fileName = id + fileExtension.apply(image.getOriginalFilename());
+        try {
+            Path fileStorageLocation = Paths.get(PHOTO_DIRECTORY).toAbsolutePath().normalize();
+            if(!Files.exists(fileStorageLocation)) {
+                Files.createDirectories(fileStorageLocation);
+            }
+            Files.copy(image.getInputStream(), fileStorageLocation.resolve(fileName), REPLACE_EXISTING);
+            return ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/contacts/image/"+ id + fileExtension.apply(image.getOriginalFilename()))
+                    .toUriString();
+        } catch (Exception exception) {
+            throw new RuntimeException("Unable to save image");
+        }
+    };
 }
+
