@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
@@ -33,5 +34,11 @@ public class ContactService {
         // Assignment
     }
 
-
+    public String uploadPhoto(String id, MultipartFile file) {
+        Contact contact = getContactById(id);
+        String photoUrl = null;
+        contact.setPhotoUrl(photoUrl);
+        contactRepo.save(contact);
+        return photoUrl;
+    }
 }
