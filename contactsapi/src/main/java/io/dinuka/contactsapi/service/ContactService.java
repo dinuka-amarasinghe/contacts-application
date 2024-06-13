@@ -42,7 +42,7 @@ public class ContactService {
     }
 
     public void deleteContact(Contact contact) {
-        // Assignment
+        contactRepo.delete(contact);
     }
 
     public String uploadPhoto(String id, MultipartFile file) {
