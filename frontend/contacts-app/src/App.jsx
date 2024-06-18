@@ -1,11 +1,14 @@
 import {useEffect, useState} from 'react'
 import {getContacts} from "./api/ContactService.jsx";
 import './App.css'
+import Header from "./components/Header.jsx";
 
 
 function App() {
     const [data, setData] = useState({})
     const [currentPage, setCurrentPage] = useState(0)
+
+    const toggleModal = (show) => {}
 
     const getAllContacts = async (page= 0, size = 10) => {
         try {
@@ -19,14 +22,15 @@ function App() {
         }
     }
 
+
     useEffect(() => {
         getAllContacts()
     }, []);
 
     return (
-        <div>
-            <h1>Hello</h1>
-        </div>
+        <>
+            <Header toggleModal={toggleModal} nbOfContacts={50} />
+        </>
     )
 }
 
