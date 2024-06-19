@@ -57,12 +57,17 @@ function App() {
             console.log(error);
         }
     };
-
+ 
     const updateContact = async () => {
 
     };
 
-    const updateImage = async () => {
+    const updateImage = async (formData) => {
+        try {
+            const {data: photoUrl} = await updatePhoto(formData);
+        } catch (error) {
+            console.log(error);
+        }
 
     };
 
