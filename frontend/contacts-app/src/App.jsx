@@ -7,6 +7,7 @@ import {Route, Routes, Navigate} from "react-router-dom";
 
 function App() {
     const modalRef = useRef();
+    const fileRef = useRef();
     const [data, setData] = useState({});
     const [currentPage, setCurrentPage] = useState(0);
     const [file, setFile] = useState(undefined);
@@ -92,7 +93,8 @@ function App() {
                             </div>
                             <div className="file-input">
                                 <span className="details">Profile Photo</span>
-                                <input type="file" name="photo" required/>
+                                <input onChange={(e) => setFile(e.target.files[0])} ref={fileRef} type="file"
+                                       name="photo" required/>
                             </div>
                         </div>
                         <div className="form_footer">
