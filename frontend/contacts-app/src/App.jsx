@@ -13,6 +13,7 @@ function App() {
     const [currentPage, setCurrentPage] = useState(0);
     const [file, setFile] = useState(undefined);
     const [values, setValues] = useState({
+        id: '',
         name: '',
         email: '',
         phone: '',
@@ -57,9 +58,14 @@ function App() {
             console.log(error);
         }
     };
- 
-    const updateContact = async () => {
 
+    const updateContact = async (contact) => {
+        try {
+            const {data} = await saveContact(contact);
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const updateImage = async (formData) => {
@@ -68,7 +74,6 @@ function App() {
         } catch (error) {
             console.log(error);
         }
-
     };
 
     useEffect(() => {
@@ -93,7 +98,8 @@ function App() {
                         <Route path="/contacts" element={<ContactList data={data} currentPage={currentPage}
                                                                       getAllContacts={getAllContacts}/>}/>
                         <Route path="/contacts/:id"
-                               element={<ContactDetail updateContact={updateContact} updateImage={updateImage}/>}/>
+                               element={<ContactDetail updateContact={updateContact} updateImage={updateImage}
+                                                       getAllContacts={getAllContacts}/>}/>
                     </Routes>
                 </div>
             </main>

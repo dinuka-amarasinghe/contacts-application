@@ -2,7 +2,7 @@ import {useState, useRef, useEffect} from "react";
 import {Link, useParams} from "react-router-dom";
 import {getContact} from "../api/ContactService.jsx";
 
-const ContactDetail = ({updateContact, updateImage}) => {
+const ContactDetail = ({updateContact, updateImage, getAllContacts}) => {
     const inputRef = useRef();
     const [contact, setContact] = useState({
         name: '',
@@ -15,7 +15,6 @@ const ContactDetail = ({updateContact, updateImage}) => {
     });
 
     const {id} = useParams();
-    console.log(id);
 
     const fetchContact = async (id) => {
         try {
@@ -29,7 +28,6 @@ const ContactDetail = ({updateContact, updateImage}) => {
 
     const selectImage = () => {
         inputRef.current.click();
-
     };
 
     const updatePhoto = async (file) => {
@@ -42,6 +40,17 @@ const ContactDetail = ({updateContact, updateImage}) => {
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const onChange = (e) => {
+        setContact({...contact, [e.target.name]: e.target.value});
+    };
+
+    const onUpdateContact = async (e) => {
+        e.preventDefault();
+        await updateContact(contact);
+        await fetchContact(id);
+        await getAllContacts();
     };
 
     useEffect(() => {
@@ -59,7 +68,8 @@ const ContactDetail = ({updateContact, updateImage}) => {
                     <div className="profile__metadata">
                         <p className="profile__name">{contact.name}</p>
                         <p className="profile__muted">JPG, GIF, or PNG. Max size of 10MB.</p>
-                        <button onClick={selectImage} className="btn"><i className="bi bi-cloud-upload"></i>Change Photo
+                        <button onClick={selectImage} className="btn"><i className="bi bi-cloud-upload"></i>&nbsp;Change
+                            Photo
                         </button>
                     </div>
                 </div>
