@@ -1,9 +1,10 @@
 import {useEffect, useRef, useState} from 'react';
+import {Route, Routes, Navigate} from "react-router-dom";
 import './App.css';
 import Header from "./components/Header.jsx";
 import {getContacts, saveContact, updatePhoto} from "./api/ContactService.jsx";
 import ContactList from "./components/ContactList.jsx";
-import {Route, Routes, Navigate} from "react-router-dom";
+import ContactDetail from "./components/ContactDetail.jsx";
 
 function App() {
     const modalRef = useRef();
@@ -57,6 +58,14 @@ function App() {
         }
     };
 
+    const updateContact = async () => {
+
+    };
+
+    const updateImage = async () => {
+
+    };
+
     useEffect(() => {
         getAllContacts();
     }, []);
@@ -78,6 +87,8 @@ function App() {
                         <Route path="/" element={<Navigate to={'/contacts'}/>}/>
                         <Route path="/contacts" element={<ContactList data={data} currentPage={currentPage}
                                                                       getAllContacts={getAllContacts}/>}/>
+                        <Route path="/contacts/:id"
+                               element={<ContactDetail updateContact={updateContact} updateImage={updateImage}/>}/>
                     </Routes>
                 </div>
             </main>
