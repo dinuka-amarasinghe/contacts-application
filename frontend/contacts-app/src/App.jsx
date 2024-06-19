@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import './App.css';
 import Header from "./components/Header.jsx";
-import {getContacts} from "./api/ContactService.jsx";
+import {getContacts, saveContact} from "./api/ContactService.jsx";
 import ContactList from "./components/ContactList.jsx";
 import {Route, Routes, Navigate} from "react-router-dom";
 
@@ -26,6 +26,32 @@ function App() {
             const {data} = await getContacts(page, size);
             setData(data);
             console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleNewContact = async (e) => {
+        e.preventDefault();
+        try {
+            const {data} = await saveContact(values, file);
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+            formData.append('id', data.id);
+            const {data: photoUrl} = await saveContact(values, formData);
+            toggleModal(false);
+            console.log(photoUrl);
+            setFile(undefined);
+            fileRef.current.value = null;
+            setValues({
+                name: '',
+                email: '',
+                phone: '',
+                address: '',
+                title: '',
+                status: '',
+            });
+            getAllContacts();
         } catch (error) {
             console.log(error);
         }
@@ -65,7 +91,7 @@ function App() {
                 </div>
                 <div className="divider"></div>
                 <div className="modal__body">
-                    <form>
+                    <form onSubmit={handleNewContact}>
                         <div className="user-details">
                             <div className="input-box">
                                 <span className="details">Name</span>
