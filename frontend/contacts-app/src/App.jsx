@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import './App.css';
 import Header from "./components/Header.jsx";
-import {getContacts, saveContact} from "./api/ContactService.jsx";
+import {getContacts, saveContact, updatePhoto} from "./api/ContactService.jsx";
 import ContactList from "./components/ContactList.jsx";
 import {Route, Routes, Navigate} from "react-router-dom";
 
@@ -31,16 +31,16 @@ function App() {
         }
     };
 
-    const handleNewContact = async (e) => {
-        e.preventDefault();
+    const handleNewContact = async (event) => {
+        event.preventDefault();
         try {
-            const {data} = await saveContact(values, file);
+            const {data} = await saveContact(values);
             const formData = new FormData();
             formData.append('file', file, file.name);
             formData.append('id', data.id);
-            const {data: photoUrl} = await saveContact(values, formData);
-            toggleModal(false);
+            const {data: photoUrl} = await updatePhoto(formData);
             console.log(photoUrl);
+            toggleModal(false);
             setFile(undefined);
             fileRef.current.value = null;
             setValues({
@@ -51,7 +51,7 @@ function App() {
                 title: '',
                 status: '',
             });
-            getAllContacts();
+            await getAllContacts();
         } catch (error) {
             console.log(error);
         }
@@ -63,7 +63,6 @@ function App() {
 
     const onChange = (e) => {
         setValues({...values, [e.target.name]: e.target.value});
-        console.log(values);
     };
 
     const toggleModal = (show) => {
