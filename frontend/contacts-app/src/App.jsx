@@ -1,10 +1,13 @@
 import {useEffect, useRef, useState} from 'react';
 import {Route, Routes, Navigate} from "react-router-dom";
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from "./components/Header.jsx";
 import {getContacts, saveContact, updatePhoto} from "./api/ContactService.jsx";
 import ContactList from "./components/ContactList.jsx";
 import ContactDetail from "./components/ContactDetail.jsx";
+import {toastError} from "./api/ToastService.jsx";
+import {ToastContainer} from 'react-toastify';
 
 function App() {
     const modalRef = useRef();
@@ -30,6 +33,7 @@ function App() {
             console.log(data);
         } catch (error) {
             console.log(error);
+            toastError(error.message);
         }
     };
 
@@ -56,6 +60,7 @@ function App() {
             await getAllContacts();
         } catch (error) {
             console.log(error);
+            toastError(error.message);
         }
     };
 
@@ -65,6 +70,7 @@ function App() {
             console.log(data);
         } catch (error) {
             console.log(error);
+            toastError(error.message);
         }
     };
 
@@ -73,6 +79,7 @@ function App() {
             const {data: photoUrl} = await updatePhoto(formData);
         } catch (error) {
             console.log(error);
+            toastError(error.message);
         }
     };
 
@@ -152,6 +159,7 @@ function App() {
                     </form>
                 </div>
             </dialog>
+            <ToastContainer/>
         </>
     );
 }
