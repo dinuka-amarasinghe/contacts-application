@@ -22,7 +22,7 @@ function App() {
         status: '',
     });
 
-    const getAllContacts = async (page = 0, size = 10) => {
+    const getAllContacts = async (page = 0, size = 2) => {
         try {
             setCurrentPage(page);
             const {data} = await getContacts(page, size);
